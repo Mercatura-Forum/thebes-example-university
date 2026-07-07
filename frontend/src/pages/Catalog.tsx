@@ -74,7 +74,13 @@ export function Catalog() {
           return (
             <article key={c.id.toString()} ref={(el) => { cardRefs.current[c.id.toString()] = el }}
               className={`card overflow-hidden ${state === 'locked' ? 'opacity-70' : ''}`}>
-              <MediaImage path={c.photoPath} alt={c.title} ratio="3 / 2" />
+              {c.photoPath
+                ? <MediaImage path={c.photoPath} alt={c.title} ratio="3 / 2" />
+                : (
+                  <div className="course-plate" aria-hidden="true">
+                    <span className="font-display text-2xl font-extrabold tracking-tight">{c.code}</span>
+                  </div>
+                )}
               <div className="p-4">
                 <div className="flex items-baseline justify-between gap-2">
                   <p className="text-xs font-bold uppercase tracking-wider text-[var(--color-crimson)]">{c.code}</p>
