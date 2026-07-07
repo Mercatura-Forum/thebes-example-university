@@ -63,3 +63,13 @@ body { margin: 0; background: var(--color-paper); color: var(--color-ink); font-
 
 :focus-visible { outline: 2px solid var(--color-crimson); outline-offset: 2px; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+
+/* Compact collegiate plate for photo-less courses: crimson-wash banner. */
+.course-plate {
+  display: grid; place-items: center; height: 72px;
+  color: color-mix(in oklab, var(--color-crimson) 75%, var(--color-ink));
+  background:
+    repeating-linear-gradient(105deg, transparent 0 18px, color-mix(in oklab, var(--color-crimson) 6%, transparent) 18px 19px),
+    linear-gradient(120deg, color-mix(in oklab, var(--color-crimson) 10%, var(--color-surface)), var(--color-surface));
+  border-bottom: 1px solid var(--color-line);
+}
