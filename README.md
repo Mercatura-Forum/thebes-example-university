@@ -1,11 +1,23 @@
 # thebes-example-university
 
-An on-chain course-registration app built on [Thebes Protocol](https://github.com/Mercatura-Forum/Thebes-Protocol-):
-a Motoko backend that holds the course catalog and per-student enrollments, and a
-React frontend served as certified assets. It demonstrates the full shape of a
-Thebes application — passkey sign-in, controller-gated registrar admin, atomic
-seat allocation, and threshold-signed on-chain state — in one self-contained
-example.
+Quad — an on-chain registrar built on
+[Thebes Protocol](https://github.com/Mercatura-Forum/Thebes-Protocol-): a Motoko
+backend that holds the course catalog (with prerequisites and credits),
+per-student enrollments, waitlists and append-only transcripts, and a React
+frontend served as certified assets.
+
+The property this example proves: **a registration that cannot contradict
+itself.** A seat never oversells (every guard and the seat increment share one
+synchronous call); a student never double-enrolls, never exceeds the 18-credit
+load, and never enters a course whose prerequisites they have not completed —
+the catalog is a DAG by construction, since a course can only require courses
+that already exist. Full courses queue a FIFO waitlist that promotes
+first-come-first-eligible when a seat frees. Grades are recorded once by the
+registrar onto an append-only transcript; GPA is computed on-chain,
+credit-weighted. A **public oracle** (`invariantReportView`) re-proves five
+laws over the whole university on every read.
+
+Live demo: <https://memphis.mercaturaforum.com/_/raw/191581724526353/index.html>
 
 ## Architecture
 
@@ -31,12 +43,14 @@ deploy time (see [Deploy](#deploy)).
 
 | Method | Kind | Purpose |
 | --- | --- | --- |
-| `coursesView` | query | Browse the catalog (flat records with seats remaining). |
-| `myCoursesView` | query | The caller's enrolled courses. |
-| `seedDemo` | update | Populate demo courses (admin). |
-| `addCourse` / `setCoursePhoto` | update | Catalog management (admin). |
-| `setRegistrationOpen` / `isRegistrationOpen` | update / query | Open or close the registration window. |
-| `enroll` / `drop` | update | Student actions; both trap on a failed guard so the client never silently ignores an error, and the seat count updates atomically. |
+| `catalogView` | query | The catalog with the caller's per-course state (completed / enrolled / waitlisted / open / locked-with-reason / full) — the degree constellation draws from it. |
+| `enroll` / `drop` | update | Student actions; every guard (seats, double-enroll, prerequisites, credit load, window) traps with its reason, and the seat count updates atomically. |
+| `joinWaitlist` / `leaveWaitlist` | update | Queue for a full course; promotion is first-come-first-eligible on any freed seat. |
+| `myStandingView` / `myTranscriptView` | query | Credits in progress and completed, on-chain credit-weighted GPA, and the append-only transcript. |
+| `recordGrade` / `transferCredit` | update | Registrar grading (frees the seat and promotes the waitlist in the same step) and prior-work credit. |
+| `addCourse` / `setCoursePhoto` / `setRegistrationOpen` | update | Registrar catalog management; prerequisites must already exist. |
+| `rollView` | query | Registrar: one course's roll with each student's credit load. |
+| `invariantReportView` / `universitySealView` | query | The public five-law oracle and the every-roll-reconciles seal. |
 | `claimOwner` / `transferOwner` / `addAdmin` / `setPaused` | update | Ownership and admin surface (from `thebes-lib`'s `Admin`). |
 
 ## Toolchain
