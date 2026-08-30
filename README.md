@@ -1,7 +1,7 @@
 # thebes-example-university
 
 Quad — an on-chain registrar built on
-[Thebes Protocol](https://github.com/Mercatura-Forum/Thebes-Protocol-): a Motoko
+[Thebes Protocol](https://thebesprotocol.com): a Motoko
 backend that holds the course catalog (with prerequisites and credits),
 per-student enrollments, waitlists and append-only transcripts, and a React
 frontend served as certified assets.
