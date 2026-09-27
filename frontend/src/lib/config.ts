@@ -5,5 +5,5 @@ declare global {
     MEDIA_CID?: number
   }
 }
-export const UNIVERSITY_CID: number = (typeof window !== 'undefined' && window.UNIVERSITY_CID) || 0
-export const MEDIA_CID: number = (typeof window !== 'undefined' && window.MEDIA_CID) || 0
+export const UNIVERSITY_CID: number = (typeof window !== 'undefined' && window.UNIVERSITY_CID) || 267175616171384
+export const MEDIA_CID: number = (typeof window !== 'undefined' && window.MEDIA_CID) || 109836141664787
